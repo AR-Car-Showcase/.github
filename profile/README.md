@@ -21,19 +21,62 @@ Users can:
 
 ---
 
-## 📸 App Screenshots
+## 📸 Platform Showcase
+<table>
+  <tr>
+    <td align="center">
+      <img src="../screenshots/light_home.png" width="250">
+      <br><b>Home (Light)</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/dark_home.png" width="250">
+      <br><b>Home (Dark)</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/light_explore.png" width="250">
+      <br><b>Explore Catalog</b>
+    </td>
+  </tr>
 
-| Home (Light) | Home (Dark) |
-|:---:|:---:|
-| <img src="../screenshots/light_home.png" width="250"> | <img src="../screenshots/dark_home.png" width="250"> |
-| **Explore Catalog** | **Car Details** |
-| <img src="../screenshots/light_explore.png" width="250"> | <img src="../screenshots/light_cardetails.png" width="250"> |
-| **3D Studio** | **Customized Model (Dark)** |
-| <img src="../screenshots/light_3D_Studio.png" width="250"> | <img src="../screenshots/dark_3D_Studio_customized.png" width="250"> |
-| **AR Mode** | **AR Customized** |
-| <img src="../screenshots/light_AR_mode.png" width="250"> | <img src="../screenshots/AR_customized.png" width="250"> |
-| **AI Recommendations** | **AI Compare Chatbot** |
-| <img src="../screenshots/light_recommendation.png" width="250"> | <img src="../screenshots/dark_compare_chatbot.png" width="250"> |
+  <tr>
+    <td align="center">
+      <img src="../screenshots/light_cardetails.png" width="250">
+      <br><b>Car Details</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/light_3D_Studio.png" width="250">
+      <br><b>3D Studio</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/dark_3D_Studio_customized.png" width="250">
+      <br><b>Customized Model</b>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="../screenshots/light_AR_mode.png" width="250">
+      <br><b>AR Mode</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/AR_customized.png" width="250">
+      <br><b>AR Customized</b>
+    </td>
+    <td align="center">
+      <img src="../screenshots/light_recommendation.png" width="250">
+      <br><b>AI Recommendations</b>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="../screenshots/dark_compare_chatbot.png" width="250">
+      <br><b>AI Compare Chatbot</b>
+    </td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
 For the complete screenshot gallery and mobile application documentation, visit the Mobile App repository.
 
