@@ -21,6 +21,15 @@ Users can:
 
 ---
 
+## 🚀 Quick Links
+
+🌐 Website: https://arcarshowcase.com
+
+📦 Latest Release:
+https://github.com/AR-Car-Showcase/mobile-app/releases/latest
+
+---
+
 ## 📸 Platform Showcase
 <table>
   <tr>
