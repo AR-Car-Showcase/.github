@@ -2,18 +2,18 @@
 
 An immersive **Augmented Reality Car Showcase** platform that enables users to browse, customize, and visualize vehicles in their real-world environment using mobile Augmented Reality.
 
-Built with **React Native**, **Spring Boot**, **Blender**, and modern cloud infrastructure to deliver real-time 3D customization and AR experiences.
+Built with **React Native**, **Spring Boot**, **Blender**, and **Oracle Cloud Infrastructure** to deliver real-time 3D customization and AR experiences.
 
 ---
 
 ## 🚀 Platform Overview
 
-AR Car Showcase (ARCS) combines mobile AR technology, cloud-based 3D processing, and intelligent recommendations to create an interactive vehicle exploration experience.
+AR Car Showcase (ARCS) combines mobile AR technology, cloud-based 3D processing, intelligent recommendations, and scalable cloud infrastructure to create an interactive vehicle exploration experience.
 
 Users can:
 
 * Browse a comprehensive vehicle catalog
-* Customize colors and materials in real time
+* Customize vehicle colors and materials
 * Generate personalized 3D models
 * Experience vehicles through Augmented Reality
 * Receive AI-powered vehicle recommendations
@@ -25,120 +25,160 @@ Users can:
 
 🌐 Website: https://arcarshowcase.com
 
+🔗 API: https://api.arcarshowcase.com/api
+
 📦 Latest Release:
 https://github.com/AR-Car-Showcase/mobile-app/releases/latest
 
 ---
 
-## 📸 Platform Showcase
-<table>
-  <tr>
-    <td align="center">
-      <img src="../screenshots/light_home.png" width="250">
-      <br><b>Home (Light)</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/dark_home.png" width="250">
-      <br><b>Home (Dark)</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/light_explore.png" width="250">
-      <br><b>Explore Catalog</b>
-    </td>
-  </tr>
+## ☁️ Production Architecture
 
-  <tr>
-    <td align="center">
-      <img src="../screenshots/light_cardetails.png" width="250">
-      <br><b>Car Details</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/light_3D_Studio.png" width="250">
-      <br><b>3D Studio</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/dark_3D_Studio_customized.png" width="250">
-      <br><b>Customized Model</b>
-    </td>
-  </tr>
+```mermaid
+flowchart LR
 
-  <tr>
-    <td align="center">
-      <img src="../screenshots/light_AR_mode.png" width="250">
-      <br><b>AR Mode</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/AR_customized.png" width="250">
-      <br><b>AR Customized</b>
-    </td>
-    <td align="center">
-      <img src="../screenshots/light_recommendation.png" width="250">
-      <br><b>AI Recommendations</b>
-    </td>
-  </tr>
+    USER["Mobile App"]
 
-  <tr>
-    <td align="center">
-      <img src="../screenshots/dark_compare_chatbot.png" width="250">
-      <br><b>AI Compare Chatbot</b>
-    </td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+    CF["Cloudflare<br/>api.arcarshowcase.com"]
 
-For the complete screenshot gallery and mobile application documentation, visit the Mobile App repository.
+    subgraph BackendVM["Oracle Cloud VM 1 - Backend"]
+        NGINX1["Nginx"]
+        API["Spring Boot API"]
+        DB["PostgreSQL"]
+        CACHE["Redis"]
+        REC["Recommendation Service"]
+
+        NGINX1 --> API
+        API --> DB
+        API --> CACHE
+        API --> REC
+    end
+
+    subgraph BlenderVM["Oracle Cloud VM 2 - Blender"]
+        NGINX2["Nginx"]
+        BLENDER["Blender Service"]
+
+        NGINX2 --> BLENDER
+    end
+
+    STORAGE["OCI Object Storage"]
+
+    USER --> CF
+    CF --> NGINX1
+
+    API -->|Private VCN| NGINX2
+
+    API -->|Access Generated Models| STORAGE
+
+    BLENDER -->|Read Base Models| STORAGE
+    BLENDER -->|Upload Generated Models| STORAGE
+```
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Infrastructure Highlights
+
+### Oracle Cloud Infrastructure
+
+* Two Oracle Cloud Always Free VMs
+* Private VCN networking
+* Oracle Object Storage
+* OCI IAM Policies
+* OCI Instance Principals
+
+### Security
+
+* Cloudflare DNS & Proxy
+* HTTPS with Let's Encrypt
+* Nginx Reverse Proxy
+* JWT Authentication
+* Spring Security
+* Email Verification
+
+### Scalability
+
+* Containerized deployment using Docker
+* Separate compute for backend and 3D generation
+* Cloud object storage for generated assets
+* Service isolation through private networking
+
+---
+
+## 🔄 3D Generation Pipeline
+
+When a user customizes a vehicle:
+
+1. Customization request is submitted from the mobile application.
+2. Spring Boot validates and processes the request.
+3. Blender Service receives generation instructions.
+4. Base vehicle model is downloaded from OCI Object Storage.
+5. Materials and colors are applied dynamically.
+6. A customized GLB model is generated.
+7. Generated model is uploaded back to OCI Object Storage.
+8. Model URL is returned to the application.
+9. User can instantly view the customized vehicle in AR.
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│          Mobile Client (React Native / Expo)           │
-│  • Vehicle Catalog                                     │
-│  • 3D Customization Studio                             │
-│  • Augmented Reality Viewer                            │
-│  • User Authentication                                 │
-└────────────────┬───────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────┐
-│              Cloudflare Network Layer                  │
-│        DNS • CDN • SSL • Security Protection           │
-└────────────────┬───────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────┐
-│                Spring Boot Backend                     │
-│                                                       │
-│  • Authentication & Authorization                     │
-│  • Vehicle Catalog APIs                               │
-│  • User Management                                    │
-│  • Recommendation Engine                              │
-└───────────────┬───────────────────────────┬────────────┘
-                │                           │
-                ▼                           ▼
-┌──────────────────────┐     ┌──────────────────────────┐
-│     PostgreSQL       │     │         Redis            │
-│   Persistent Data    │     │    Caching Layer         │
-└──────────────────────┘     └──────────────────────────┘
-                │
-                ▼
-┌─────────────────────────────────────────────────────────┐
-│             Blender Generation Service                │
-│                                                       │
-│  • Model Processing                                   │
-│  • Material Customization                             │
-│  • GLB Generation                                     │
-└────────────────┬───────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────────┐
-│            Oracle Cloud Object Storage                │
-│         Vehicle Assets & Generated Models             │
-└─────────────────────────────────────────────────────────┘
+Mobile App
+      ↓
+Spring Boot API
+      ↓
+Blender Service
+      ↓
+OCI Object Storage
+      ↓
+Generated GLB URL
+      ↓
+AR Viewer
 ```
+
+---
+
+## ☁️ Cloud Deployment
+
+AR Car Showcase is deployed entirely on Oracle Cloud Infrastructure.
+
+Deployment stack:
+
+* Cloudflare
+* Nginx
+* Spring Boot
+* PostgreSQL
+* Redis
+* Recommendation Service
+* Blender Service
+* Oracle Object Storage
+
+The platform uses private VM-to-VM communication through Oracle VCN networking while exposing only the public API endpoint.
+
+```text
+Internet
+    ↓
+Cloudflare
+    ↓
+Nginx
+    ↓
+Spring Boot
+    ↓
+Private VCN
+    ↓
+Blender Service
+```
+
+---
+
+## 🔐 OCI Instance Principals
+
+The Blender Service uses Oracle Cloud Instance Principals for secure access to Object Storage.
+
+Benefits:
+
+* No API keys stored in containers
+* No OCI credentials mounted into Docker
+* IAM-managed permissions
+* Secure upload/download operations
+
+This follows a production-grade cloud security approach for service authentication.
 
 ---
 
@@ -163,84 +203,51 @@ For the complete screenshot gallery and mobile application documentation, visit 
 * JWT Authentication
 * Docker
 
+### AI & Recommendations
+
+* Python
+* FastAPI
+* Machine Learning Recommendation Engine
+
 ### 3D Processing
 
 * Blender
 * Python
 * Flask
 
-### Cloud Infrastructure
+### Cloud & Infrastructure
 
-* Oracle Cloud Infrastructure
+* Oracle Cloud Infrastructure (OCI)
 * Cloudflare
 * Nginx
+* Let's Encrypt
+* Docker Compose
 * Oracle Object Storage
 
 ---
 
 ## ✨ Features
 
-* 🔭 Augmented Reality vehicle visualization
-* 🎨 Real-time vehicle customization
-* 🚗 Interactive 3D vehicle viewer
-* 🤖 AI-powered recommendations
-* 🔐 Secure authentication system
-* 💾 Personal showroom and saved designs
-* 🌐 Cross-platform mobile support
-* ⚡ Cloud-based 3D model generation
+* 🔭 Augmented Reality Vehicle Placement
+* 🎨 Real-Time Vehicle Customization
+* 🚗 Interactive 3D Vehicle Viewer
+* 🤖 AI-Powered Vehicle Recommendations
+* 🔐 Secure Authentication System
+* 💾 Personal Showroom & Saved Designs
+* ☁️ Cloud-Based 3D Model Generation
+* 🌐 HTTPS Enabled Infrastructure
+* ⚡ Private Multi-VM Cloud Architecture
+* 📦 Cloud Object Storage Integration
 
 ---
-
 ## 📦 Repositories
 
-| Repository                                                                          | Description                                           |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| [Mobile App](https://github.com/AR-Car-Showcase/mobile-app)                         | React Native application with AR and 3D visualization |
-| [Spring Boot Server](https://github.com/AR-Car-Showcase/spring-boot-server)         | Core backend APIs and business logic                  |
-| [Blender Service](https://github.com/AR-Car-Showcase/blender-service)               | Automated 3D model generation pipeline                |
-| [Recommendation Service](https://github.com/AR-Car-Showcase/recommendation-service) | AI-powered vehicle recommendation engine              |
-
----
-
-## ☁️ Deployment
-
-AR Car Showcase is deployed on Oracle Cloud Infrastructure using a containerized architecture with Cloudflare providing DNS, CDN, SSL, and security services.
-
-Core platform services include:
-
-* Spring Boot APIs
-* PostgreSQL Database
-* Redis Cache
-* Blender Generation Service
-* Oracle Object Storage
-* Cloudflare Network Layer
-
----
-
-## 🔄 3D Generation Workflow
-
-1. User customizes a vehicle in the mobile application
-2. Customization data is sent to backend services
-3. Blender processing service generates a personalized 3D model
-4. Generated assets are stored in cloud object storage
-5. Model becomes available for viewing and AR projection
-
----
-
-## 🔐 Security
-
-* JWT Authentication
-* Spring Security
-* HTTPS/TLS Encryption
-* Email Verification
-* Secure Cloud Resource Access
-
----
-
-
-## 🌐 Learn More
-
-Explore the individual repositories for setup instructions, implementation details, API documentation, and architecture information.
+| Repository | Description |
+|------------|-------------|
+| [Mobile App](https://github.com/AR-Car-Showcase/mobile-app) | React Native application with AR and 3D visualization |
+| [Spring Boot Server](https://github.com/AR-Car-Showcase/spring-boot-server) | Core backend APIs and business logic |
+| [Blender Service](https://github.com/AR-Car-Showcase/blender-service) | Automated 3D model generation pipeline |
+| [Recommendation Service](https://github.com/AR-Car-Showcase/recommendation-service) | AI-powered vehicle recommendation engine |
 
 ---
 
